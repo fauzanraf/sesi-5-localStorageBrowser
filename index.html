@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    #root {
+        background-color: tomato;
+        color: white;
+        font-family: Arial, sans-serif;
+        font-size: 2em;
+        height: 100vh;
+        text-align: center;
+    }
+</style>
+
+<body>
+    <!-- INI KONTEN KITA -->
+    <div id="root">
+        <input type="text" placeholder="username" id="usernameInput">
+        <input type="password" placeholder="password" id="password">
+        <button onclick="onLogin()" id="loginButton">LOGIN</button>
+        <button onclick="onLogout()" id="logoutButton">LOGOUT</button>
+        <br />
+        <h1 id="admin">LOGIN SEBAGAI ADMIN</h1>
+        <h1 id="basic">LOGIN SEBAGAI USER BIASA</h1>
+    </div>
+    <script type="application/javascript">
+        let usernameInput = document.getElementById('usernameInput');
+        let passwordInput = document.getElementById('password');
+        let loginButton = document.getElementById('loginButton');
+        let admin = document.getElementById('admin');
+        let basic = document.getElementById('basic');
+
+        admin.style.display = 'none';
+        basic.style.display = 'none';
+        logoutButton.style.display = 'none';
+
+
+        function onLogin() {
+            localStorage.setItem('username', usernameInput.value);
+            logoutButton.style.display = 'block';
+            if (usernameInput.value === 'admin' && passwordInput.value === 'admin123') {
+                // don't display the login form start
+                usernameInput.style.display = 'none';
+                passwordInput.style.display = 'none';
+                loginButton.style.display = 'none';
+                // don't display the login form end
+                localStorage.setItem('role', 'admin');
+                basic.style.display = 'none';
+                admin.style.display = 'block';
+            } else {
+                // don't display the login form start
+                usernameInput.style.display = 'none';
+                passwordInput.style.display = 'none';
+                loginButton.style.display = 'none';
+                // don't display the login form end
+                localStorage.setItem('role', 'basic');
+                basic.style.display = 'none';
+                basic.style.display = 'block';
+            }
+        }
+
+        if (localStorage.getItem('username')) {
+            // don't display the login form start
+            usernameInput.style.display = 'none';
+            passwordInput.style.display = 'none';
+            loginButton.style.display = 'none';
+            logoutButton.style.display = 'block';
+            // don't display the login form end
+            if (localStorage.getItem('role') === 'admin') {
+                basic.style.display = 'none';
+                admin.style.display = 'block';
+            } else {
+                admin.style.display = 'none';
+                basic.style.display = 'block';
+            }
+        }
+
+        function onLogout() {
+            localStorage.clear();
+            location.reload();
+        }
+    </script>
+</body>
+
+</html>
