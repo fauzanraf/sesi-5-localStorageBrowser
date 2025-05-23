@@ -9,7 +9,7 @@
 
 <style>
     #root {
-        background-color: tomato;
+        background-color: darkslategray;
         color: white;
         font-family: Arial, sans-serif;
         font-size: 2em;
@@ -28,6 +28,14 @@
         <br />
         <h1 id="admin">LOGIN SEBAGAI ADMIN</h1>
         <h1 id="basic">LOGIN SEBAGAI USER BIASA</h1>
+        <h1 id="sekretaris">LOGIN SEBAGAI SEKRETARIS</h1>
+        <h1 id="anggotaTim">LOGIN SEBAGAI ANGOTA TIM</h1>
+        <h2 id="formPendaftaran">SILAKAN ISI PENDAFTARAN DI BAWAH SEBAGAI BERIKUT</h2>
+        <input type="text" placeholder="Nama Lengkap" id="namaLengkap">
+        <input type="text" placeholder="NIM" id="nim">
+        <input type="text" placeholder="No HP" id="noHp">
+        <input type="text" placeholder="Email" id="email">
+        <!-- kirim pendaftaran -->
     </div>
     <script type="application/javascript">
         let usernameInput = document.getElementById('usernameInput');
@@ -35,11 +43,86 @@
         let loginButton = document.getElementById('loginButton');
         let admin = document.getElementById('admin');
         let basic = document.getElementById('basic');
+        let sekretaris = document.getElementById('sekretaris');
+        let anggotaTim = document.getElementById('anggotaTim');
+        let formPendaftaran = document.getElementById('formPendaftaran');
+        let namaLengkap = document.getElementById('namaLengkap');
+        let nim = document.getElementById('nim');
+        let noHp = document.getElementById('noHp');
+        let email = document.getElementById('email');
+        let logoutButton = document.getElementById('logoutButton');
 
         admin.style.display = 'none';
         basic.style.display = 'none';
+        sekretaris.style.display = 'none';
+        anggotaTim.style.display = 'none';
         logoutButton.style.display = 'none';
+        formPendaftaran.style.display = 'none';
+        namaLengkap.style.display = 'none';
+        nim.style.display = 'none';
+        noHp.style.display = 'none';
+        email.style.display = 'none';
 
+        // Create and insert the submit button for the form
+        let submitButton = document.createElement('button');
+        submitButton.innerText = 'SUBMIT PENDAFTARAN';
+        submitButton.id = 'submitButton';
+        submitButton.style.display = 'none';
+        document.getElementById('root').appendChild(submitButton);
+
+        // Create notification element
+        let notif = document.createElement('h2');
+        notif.id = 'notif';
+        notif.style.display = 'none';
+        document.getElementById('root').appendChild(notif);
+
+        // Create button to refill the form
+        let refillButton = document.createElement('button');
+        refillButton.innerText = 'ISI LAGI';
+        refillButton.id = 'refillButton';
+        refillButton.style.display = 'none';
+        document.getElementById('root').appendChild(refillButton);
+
+        refillButton.onclick = function() {
+            notif.style.display = 'none';
+            refillButton.style.display = 'none';
+            showForm();
+        };
+
+        function showForm() {
+            formPendaftaran.style.display = 'block';
+            namaLengkap.style.display = 'inline-block';
+            nim.style.display = 'inline-block';
+            noHp.style.display = 'inline-block';
+            email.style.display = 'inline-block';
+            submitButton.style.display = 'inline-block';
+        }
+
+        function hideForm() {
+            formPendaftaran.style.display = 'none';
+            namaLengkap.style.display = 'none';
+            nim.style.display = 'none';
+            noHp.style.display = 'none';
+            email.style.display = 'none';
+            submitButton.style.display = 'none';
+        }
+
+        submitButton.onclick = function() {
+            // Store each field as its own key in localStorage, without role suffix
+            localStorage.setItem('namaLengkap', namaLengkap.value);
+            localStorage.setItem('nim', nim.value);
+            localStorage.setItem('noHp', noHp.value);
+            localStorage.setItem('email', email.value);
+            notif.innerText = 'Data pendaftaran berhasil disimpan untuk role: ' + (localStorage.getItem('role') || 'basic');
+            notif.style.display = 'block';
+            refillButton.style.display = 'inline-block';
+            hideForm();
+            // Optionally clear the form
+            namaLengkap.value = '';
+            nim.value = '';
+            noHp.value = '';
+            email.value = '';
+        }
 
         function onLogin() {
             localStorage.setItem('username', usernameInput.value);
@@ -53,6 +136,33 @@
                 localStorage.setItem('role', 'admin');
                 basic.style.display = 'none';
                 admin.style.display = 'block';
+                sekretaris.style.display = 'none';
+                anggotaTim.style.display = 'none';
+                showForm();
+            } else if (usernameInput.value === 'sekretaris' && passwordInput.value === 'sekretaris123'){
+                // don't display the login form start
+                usernameInput.style.display = 'none';
+                passwordInput.style.display = 'none';
+                loginButton.style.display = 'none';
+                // don't display the login form end
+                localStorage.setItem('role', 'sekretaris');
+                basic.style.display = 'none';
+                admin.style.display = 'none';
+                sekretaris.style.display = 'block';
+                anggotaTim.style.display = 'none';
+                showForm();
+            } else if (usernameInput.value === 'anggotaTim' && passwordInput.value === 'anggotaTim123'){
+                // don't display the login form start
+                usernameInput.style.display = 'none';
+                passwordInput.style.display = 'none';
+                loginButton.style.display = 'none';
+                // don't display the login form end
+                localStorage.setItem('role', 'anggotaTim');
+                basic.style.display = 'none';
+                admin.style.display = 'none';
+                sekretaris.style.display = 'none';
+                anggotaTim.style.display = 'block';
+                showForm();
             } else {
                 // don't display the login form start
                 usernameInput.style.display = 'none';
@@ -60,8 +170,11 @@
                 loginButton.style.display = 'none';
                 // don't display the login form end
                 localStorage.setItem('role', 'basic');
-                basic.style.display = 'none';
                 basic.style.display = 'block';
+                admin.style.display = 'none';
+                sekretaris.style.display = 'none';
+                anggotaTim.style.display = 'none';
+                showForm();
             }
         }
 
@@ -75,15 +188,34 @@
             if (localStorage.getItem('role') === 'admin') {
                 basic.style.display = 'none';
                 admin.style.display = 'block';
-            } else {
+                sekretaris.style.display = 'none';
+                anggotaTim.style.display = 'none';
+                showForm();
+            } else if (localStorage.getItem('role') === 'sekretaris'){
+                basic.style.display = 'none';
                 admin.style.display = 'none';
+                sekretaris.style.display = 'block';
+                anggotaTim.style.display = 'none';
+                showForm();
+            } else if (localStorage.getItem('role') === 'anggotaTim'){
+                basic.style.display = 'none';
+                admin.style.display = 'none';
+                sekretaris.style.display = 'none';
+                anggotaTim.style.display = 'block';
+                showForm();
+            } else {
                 basic.style.display = 'block';
+                admin.style.display = 'none';
+                sekretaris.style.display = 'none';
+                anggotaTim.style.display = 'none';
+                showForm();
             }
         }
 
         function onLogout() {
             localStorage.clear();
             location.reload();
+            hideForm();
         }
     </script>
 </body>
